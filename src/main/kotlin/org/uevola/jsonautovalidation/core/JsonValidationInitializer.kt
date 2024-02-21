@@ -1,6 +1,8 @@
 package org.uevola.jsonautovalidation.core
 
 import mu.KLogging
+import org.springframework.beans.factory.aot.BeanFactoryInitializationAotContribution
+import org.springframework.beans.factory.aot.BeanFactoryInitializationAotProcessor
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 import org.springframework.beans.factory.support.BeanDefinitionRegistry
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor
@@ -14,6 +16,7 @@ import kotlin.time.ExperimentalTime
 @Configuration
 open class JsonValidationInitializer :
     BeanDefinitionRegistryPostProcessor,
+    BeanFactoryInitializationAotProcessor,
     EnvironmentAware {
     companion object : KLogging()
 
@@ -25,5 +28,11 @@ open class JsonValidationInitializer :
 
     override fun setEnvironment(environment: Environment) {
         JsonValidationConfig.init(environment)
+    }
+
+    override fun processAheadOfTime(
+        beanFactory: ConfigurableListableBeanFactory
+    ): BeanFactoryInitializationAotContribution? {
+        return null
     }
 }
